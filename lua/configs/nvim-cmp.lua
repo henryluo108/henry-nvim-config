@@ -2,6 +2,28 @@
 local cmp = require'cmp'
 local luasnip = require'luasnip'
 
+-- Ensure util.default_tbl_get exists (fix for LuaSnip bug)
+local util = require('luasnip.util.util')
+if util.default_tbl_get == nil then
+  util.default_tbl_get = function(default, t, ...)
+    if t ~= nil then
+      local tbl_val = vim.tbl_get(t, ...)
+      if tbl_val ~= nil then
+        return tbl_val
+      end
+    end
+    return default
+  end
+end
+
+-- Load friendly-snippets
+require("luasnip.loaders.from_vscode").lazy_load({
+  paths = {
+    vim.fn.stdpath("config") .. "/snippets",
+    vim.fn.stdpath("data") .. "/lazy/friendly-snippets",
+  }
+})
+
 -- Add LSP capabilities
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
