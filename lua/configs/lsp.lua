@@ -5,8 +5,7 @@ local M = {}
 function M.config()
     local mason = require("mason")
     local mason_lspconfig = require("mason-lspconfig")
-    local lspconfig = require("lspconfig")
-    
+
     -- Add LSP capabilities for nvim-cmp
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -25,6 +24,7 @@ function M.config()
             "bashls",
             "pyright",
             "ruff",
+            "pylsp",
             "jsonls",
             "yamlls",
             "gopls",
@@ -52,6 +52,13 @@ function M.config()
                 client.server_capabilities.implementationProvider = false
                 client.server_capabilities.typeDefinitionProvider = false
                 client.server_capabilities.referencesProvider = false
+            end
+            -- Allow multiple LSP servers to handle code actions for Python files
+            -- Ruff handles import organization and linting fixes
+            -- Pyright handles type checking
+            -- Pylsp provides comprehensive code actions including adding missing imports
+            if client.name ~= 'ruff' and client.name ~= 'pyright' and client.name ~= 'pylsp' then
+                client.server_capabilities.codeActionProvider = false
             end
         elseif filetype == 'lua' then
             if client.name ~= 'lua_ls' then
@@ -87,17 +94,27 @@ function M.config()
         local opts = { buffer = bufnr, noremap = true, silent = true }
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
         vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+
+        -- Use the global deduplicated code action function for all file types
+        vim.keymap.set('n', '<leader>ca', function()
+            -- Use the deduplicated code action function from keymaps.lua
+            local success, keymaps_module = pcall(require, 'core.keymaps')
+            if success and keymaps_module.deduplicated_code_action then
+                keymaps_module.deduplicated_code_action()
+            else
+                -- Fallback to default code action
+                vim.lsp.buf.code_action()
+            end
+        end, opts)
         -- Do not add 'gd' or 'gD' mappings here to prevent conflicts with global mappings
     end
-    
-    local util = require 'lspconfig.util'
 
     -- Setup language servers individually with proper conflict resolution
     local servers = {
         'lua_ls',
         'bashls',
         'pyright',
+        'ruff',
         'jsonls',
         'yamlls',
         'gopls',
@@ -136,7 +153,7 @@ function M.config()
                 }
             }
         elseif server_name == 'ts_ls' then
-            server_config.root_dir = util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git") or util.path.dirname(vim.loop.cwd())
+            -- root_dir will be auto-detected by vim.lsp.config
         elseif server_name == 'gopls' then
             server_config.cmd = {"gopls"}
             server_config.settings = {
@@ -147,9 +164,78 @@ function M.config()
                     staticcheck = true,
                 },
             }
+        elseif server_name == 'ruff' then
+            server_config.init_options = {
+                settings = {
+                    organizeImports = true,
+                }
+            }
+            server_config.single_file_support = true
+            server_config.offset_encoding = 'utf-16'
+        elseif server_name == 'pylsp' then
+            server_config.settings = {
+                pylsp = {
+                    plugins = {
+                        -- 启用自动导入
+                        jedi_completion = {
+                            enabled = true,
+                        },
+                        -- 禁用所有 linting/formatting 插件，使用 Ruff 替代
+                        autopep8 = {
+                            enabled = false,
+                        },
+                        flake8 = {
+                            enabled = false,
+                        },
+                        pycodestyle = {
+                            enabled = false,
+                        },
+                        pydocstyle = {
+                            enabled = false,
+                        },
+                        pylint = {
+                            enabled = false,
+                        },
+                        pyflakes = {
+                            enabled = false,  -- 禁用 pyflakes 以避免兼容性问题
+                        },
+                        mccabe = {
+                            enabled = false,
+                        },
+                        -- 启用 rope 以获得更好的重构功能
+                        rope_completion = {
+                            enabled = true,
+                        },
+                        rope_autoimport = {
+                            enabled = true,  -- 自动导入
+                            memory = true,
+                        },
+                        yapf = {
+                            enabled = false,
+                        },
+                        -- 启用其他有用的插件
+                        jedi_definition = {
+                            enabled = true,
+                        },
+                        jedi_hover = {
+                            enabled = true,
+                        },
+                        jedi_references = {
+                            enabled = true,
+                        },
+                        jedi_signature_help = {
+                            enabled = true,
+                        },
+                        jedi_symbols = {
+                            enabled = true,
+                        },
+                    }
+                }
+            }
         end
 
-        lspconfig[server_name].setup(server_config)
+        vim.lsp.config(server_name, server_config)
+        vim.lsp.enable(server_name)
     end
 
     -- Ruff is already handled in the main loop with proper capability restrictions
