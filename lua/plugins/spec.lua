@@ -99,7 +99,12 @@ return {
         dependencies = { "nvim-tree/nvim-web-devicons" },
         -- or if using mini.icons/mini.nvim
         -- dependencies = { "echasnovski/mini.icons" },
-        opts = {}
+        config = function()
+            -- Call setup
+            require("fzf-lua").setup({})
+            -- Register as ui-select handler
+            require("fzf-lua").register_ui_select()
+        end
     },
 
     {
