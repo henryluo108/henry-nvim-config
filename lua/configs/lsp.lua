@@ -24,7 +24,6 @@ function M.config()
             "bashls",
             "pyright",
             "ruff",
-            "pylsp",
             "jsonls",
             "yamlls",
             "gopls",
@@ -56,8 +55,7 @@ function M.config()
             -- Allow multiple LSP servers to handle code actions for Python files
             -- Ruff handles import organization and linting fixes
             -- Pyright handles type checking
-            -- Pylsp provides comprehensive code actions including adding missing imports
-            if client.name ~= 'ruff' and client.name ~= 'pyright' and client.name ~= 'pylsp' then
+            if client.name ~= 'ruff' and client.name ~= 'pyright' then
                 client.server_capabilities.codeActionProvider = false
             end
         elseif filetype == 'lua' then
@@ -172,75 +170,11 @@ function M.config()
             }
             server_config.single_file_support = true
             server_config.offset_encoding = 'utf-16'
-        elseif server_name == 'pylsp' then
-            server_config.settings = {
-                pylsp = {
-                    plugins = {
-                        -- 启用自动导入
-                        jedi_completion = {
-                            enabled = true,
-                        },
-                        -- 禁用所有 linting/formatting 插件，使用 Ruff 替代
-                        autopep8 = {
-                            enabled = false,
-                        },
-                        flake8 = {
-                            enabled = false,
-                        },
-                        pycodestyle = {
-                            enabled = false,
-                        },
-                        pydocstyle = {
-                            enabled = false,
-                        },
-                        pylint = {
-                            enabled = false,
-                        },
-                        pyflakes = {
-                            enabled = false,  -- 禁用 pyflakes 以避免兼容性问题
-                        },
-                        mccabe = {
-                            enabled = false,
-                        },
-                        -- 启用 rope 以获得更好的重构功能
-                        rope_completion = {
-                            enabled = true,
-                        },
-                        rope_autoimport = {
-                            enabled = true,  -- 自动导入
-                            memory = true,
-                        },
-                        yapf = {
-                            enabled = false,
-                        },
-                        -- 启用其他有用的插件
-                        jedi_definition = {
-                            enabled = true,
-                        },
-                        jedi_hover = {
-                            enabled = true,
-                        },
-                        jedi_references = {
-                            enabled = true,
-                        },
-                        jedi_signature_help = {
-                            enabled = true,
-                        },
-                        jedi_symbols = {
-                            enabled = true,
-                        },
-                    }
-                }
-            }
         end
 
         vim.lsp.config(server_name, server_config)
         vim.lsp.enable(server_name)
     end
-
-    -- Ruff is already handled in the main loop with proper capability restrictions
-    -- The main server loop already includes 'ruff' and handles capability disabling in the on_attach function
-    -- No need for a separate ruff setup as it would duplicate the server connection
 end
 
 return M
