@@ -16,13 +16,51 @@ if util.default_tbl_get == nil then
   end
 end
 
--- Load friendly-snippets
-require("luasnip.loaders.from_vscode").lazy_load({
-  paths = {
-    vim.fn.stdpath("config") .. "/snippets",
-    vim.fn.stdpath("data") .. "/lazy/friendly-snippets",
-  }
+-- Setup LuaSnip
+require("luasnip").setup({
+  history = true,
+  updateevents = "TextChanged,TextChangedI",
+  enable_autosnippets = true,
 })
+
+-- Load friendly-snippets (VSCode format from lazy.nvim)
+require("luasnip.loaders.from_vscode").lazy_load()
+
+-- Load custom Lua snippets
+require("luasnip.loaders.from_lua").lazy_load({
+  paths = { vim.fn.stdpath("config") .. "/snippets/lua" }
+})
+
+-- Debug: Print loaded snippets (optional, can be commented out)
+-- vim.defer_fn(function()
+--   local ls = require('luasnip')
+--   local available = ls.available()
+--   print("Loaded snippets:")
+--   for ft, snippets in pairs(available) do
+--     print(string.format("  %s: %d snippets", ft, #snippets))
+--   end
+-- end, 100)
+
+-- Snippet selection using fzf-lua if available
+vim.keymap.set('n', '<leader>ss', function()
+  if pcall(require, 'fzf-lua') then
+    require('fzf-lua').files({
+      prompt = 'Snippets> ',
+      cwd = vim.fn.stdpath("config") .. "/snippets/lua",
+      previewer = false,
+      actions = {
+        ['default'] = function(selected)
+          local file = selected[1]
+          if file then
+            vim.cmd('edit ' .. vim.fn.stdpath("config") .. "/snippets/lua/" .. file)
+          end
+        end
+      }
+    })
+  else
+    vim.cmd('edit ' .. vim.fn.stdpath("config") .. "/snippets/lua/")
+  end
+end, { desc = 'Open snippets directory' })
 
 -- Add LSP capabilities
 local capabilities = require('cmp_nvim_lsp').default_capabilities()

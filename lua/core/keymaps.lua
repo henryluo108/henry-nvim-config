@@ -312,4 +312,13 @@ vim.keymap.set('v', 'T', '<Plug>(easymotion-F)')
 -- vim-easy-align
 vim.keymap.set('n', 'ga', '<Plug>(EasyAlign)')
 
+-- LuaSnip snippet navigation
+-- <Tab> and <S-Tab> are already configured in nvim-cmp.lua for snippet expansion/jumping
+-- Additional manual snippet commands:
+vim.keymap.set('n', '<leader>se', '<cmd>lua require("luasnip").expand()<cr>', { desc = 'Snippet: Expand' })
+vim.keymap.set('n', '<leader>sj', '<cmd>lua require("luasnip").jump(1)<cr>', { desc = 'Snippet: Jump forward' })
+vim.keymap.set('n', '<leader>sk', '<cmd>lua require("luasnip").jump(-1)<cr>', { desc = 'Snippet: Jump backward' })
+vim.keymap.set('n', '<leader>sl', '<cmd>lua require("luasnip").list_select()<cr>', { desc = 'Snippet: List choices' })
+vim.keymap.set('n', '<leader>sr', '<cmd>lua require("luasnip").refresh()<cr>', { desc = 'Snippet: Refresh' })
+
 return M

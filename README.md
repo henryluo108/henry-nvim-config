@@ -218,6 +218,35 @@ let g:python3_host_prog="/Users/henry/anaconda3/bin/python"
 - **lspkind.nvim**: Completion icons
 - **lsp_signature.nvim**: Function signatures
 
+### Snippets Configuration
+- **LuaSnip** is configured with:
+  - VSCode format snippets from `friendly-snippets`
+  - Custom Lua format snippets from `snippets/lua/python.lua`
+  - Auto-expansion enabled
+  - History tracking enabled
+- **Key mappings**:
+  - `<Tab>`: Expand snippet or jump to next placeholder
+  - `<S-Tab>`: Jump to previous placeholder
+  - `<leader>se`: Manual snippet expand
+  - `<leader>sj`: Jump forward
+  - `<leader>sk`: Jump backward
+  - `<leader>sl`: List choices (for choice nodes)
+  - `<leader>sr`: Refresh snippets
+  - `<leader>ss`: Open snippets directory
+- **Custom Python snippets** in `snippets/lua/python.lua`:
+  - `main`: Main function template
+  - `cl`: Class with docstring
+  - `func`: Function with docstring
+  - `ifm`, `if`, `ife`, `ifel`: If statements
+  - `for`, `fore`: For loops
+  - `while`: While loop
+  - `try`, `trye`: Try-except blocks
+  - `with`: Context manager
+  - `imp`, `from`: Import statements
+  - `log`: Logging setup
+  - `deco`, `decos`: Decorators
+  - `type`, `tvar`, `tfun`: Type hints
+
 ### Navigation & Search
 - **telescope.nvim**: Fuzzy finder
 - **fzf-lua**: Alternative fuzzy finder with UI-select
