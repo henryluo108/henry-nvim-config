@@ -57,6 +57,8 @@ set hlsearch
 
 let mapleader="\<space>"
 
+" Clear search highlight with ESC key
+nnoremap <silent> <ESC> :nohlsearch<CR>
 
 map <F5> :call CompileRunGcc()<CR>
 func! CompileRunGcc()
