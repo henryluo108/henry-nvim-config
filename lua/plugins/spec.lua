@@ -26,8 +26,8 @@ return {
     { "hrsh7th/cmp-path" },
     { "hrsh7th/cmp-cmdline" },
     { "hrsh7th/nvim-cmp" },
-    { "hrsh7th/cmp-vsnip" },
-    { "hrsh7th/vim-vsnip" },
+    -- { "hrsh7th/cmp-vsnip" },
+    -- { "hrsh7th/vim-vsnip" },
     { "saadparwaiz1/cmp_luasnip" },
     { "L3MON4D3/LuaSnip" },
     -- { "dcampos/cmp-snippy" },
@@ -204,6 +204,7 @@ return {
             local g = vim.g
 
             g.ale_ruby_rubocop_auto_correct_all = 1
+            g.ale_completion_enabled = 0  -- Disable ALE completion to avoid conflicts with nvim-cmp
 
             g.ale_linters = {
                 ruby = { 'rubocop', 'ruby' },

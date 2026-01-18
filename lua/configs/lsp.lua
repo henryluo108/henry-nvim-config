@@ -29,7 +29,8 @@ function M.config()
             "gopls",
             "ts_ls",
         },
-        automatic_installation = true
+        automatic_installation = true,
+        automatic_detection = false,  -- Disable auto-detection to prevent pylsp from starting
     })
     
 
@@ -42,20 +43,21 @@ function M.config()
         -- This prevents duplicate definitions from multiple LSP servers
         local filetype = vim.bo[bufnr].filetype
 
-        -- For Python files, only allow pyright to handle definitions
+        -- For Python files, only allow pyright to handle definitions and completion
         if filetype == 'python' then
+            -- Disable pylsp (python-lsp-server) entirely for Python files
+            if client.name == 'pylsp' then
+                vim.lsp.disable(client.id)
+                return
+            end
             if client.name ~= 'pyright' then
-                -- Disable definition capabilities for all servers except pyright in Python files
+                -- Disable all capabilities for non-pyright servers in Python files
                 client.server_capabilities.definitionProvider = false
                 client.server_capabilities.declarationProvider = false
                 client.server_capabilities.implementationProvider = false
                 client.server_capabilities.typeDefinitionProvider = false
                 client.server_capabilities.referencesProvider = false
-            end
-            -- Allow multiple LSP servers to handle code actions for Python files
-            -- Ruff handles import organization and linting fixes
-            -- Pyright handles type checking
-            if client.name ~= 'ruff' and client.name ~= 'pyright' then
+                client.server_capabilities.completionProvider = false
                 client.server_capabilities.codeActionProvider = false
             end
         elseif filetype == 'lua' then
@@ -170,6 +172,9 @@ function M.config()
             }
             server_config.single_file_support = true
             server_config.offset_encoding = 'utf-16'
+            server_config.capabilities = {
+                completionProvider = false,
+            }
         end
 
         vim.lsp.config(server_name, server_config)

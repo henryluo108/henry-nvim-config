@@ -71,6 +71,35 @@ local has_words_before = function()
 end
 
 cmp.setup({
+  performance = {
+    debounce = 60,
+    throttle = 30,
+    fetching_timeout = 500,
+    confirm_resolve_timeout = 80,
+    async_budget = 1,
+    max_view_entries = 200,
+  },
+  matching = {
+    disallow_fuzzy_matching = false,
+    disallow_fullfuzzy_matching = false,
+    disallow_partial_fuzzy_matching = true,
+    disallow_partial_matching = false,
+    disallow_prefix_unmatching = true,
+  },
+  sorting = {
+    priority_weight = 2,
+    comparators = {
+      cmp.config.compare.offset,
+      cmp.config.compare.exact,
+      cmp.config.compare.score,
+      cmp.config.compare.recently_used,
+      cmp.config.compare.locality,
+      cmp.config.compare.kind,
+      cmp.config.compare.sort_text,
+      cmp.config.compare.length,
+      cmp.config.compare.order,
+    },
+  },
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
@@ -111,10 +140,21 @@ cmp.setup({
     end, { 'i', 's' }),
   }),
   sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
+    { name = 'nvim_lsp', 
+      entry_filter = function(entry, ctx)
+        local client = entry.source.source.client
+        if client then
+          -- Filter out pylsp to avoid duplicates with pyright
+          if client.name == 'pylsp' then
+            return false
+          end
+        end
+        return true
+      end
+    },
+    { name = 'luasnip', duplicates = false },
   }, {
-    { name = 'buffer' },
+    { name = 'buffer', duplicates = false },
   }),
   window = {
     completion = cmp.config.window.bordered(),
@@ -123,11 +163,12 @@ cmp.setup({
   formatting = {
     format = function(entry, vim_item)
       vim_item.kind = require('lspkind').presets.default[vim_item.kind] .. ' ' .. vim_item.kind
-      vim_item.menu = ({
-        buffer = '[Buffer]',
-        nvim_lsp = '[LSP]',
-        luasnip = '[Snippet]',
-      })[entry.source.name]
+      local src = entry.source
+      local src_name = src.name or 'unknown'
+      if src.source and src.source.client then
+        src_name = src_name .. '(' .. src.source.client.name .. ')'
+      end
+      vim_item.menu = '[' .. src_name .. ']'
       return vim_item
     end,
   },
