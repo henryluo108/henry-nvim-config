@@ -63,18 +63,11 @@ require("core.theme")
 
 vim.g.webdevicons_enable = 1
 
--- Load plugin configs
-require("impatient")
-
-require('nvim-autopairs').setup({
+require("nvim-autopairs").setup({
   disable_filetype = { "TelescopePrompt" , "vim" },
 })
 
---require("configs.autocomplete").config()
 require("configs.nvim-cmp")
---require("configs.cmp")
---require("configs.git").config()
---require("configs.filetree").config()
 require("configs.statusline").config()
 require("configs.treesitter").config()
 require("configs.outlinetree").config()
@@ -83,7 +76,6 @@ require("configs.grammar").config()
 require("configs.todo-comments").config()
 
 require("configs.lsp").config()
---require("configs.startscreen").config()
 
 vim.api.nvim_set_keymap('n', '<c-P>',
     "<cmd>lua require('fzf-lua').files()<CR>",

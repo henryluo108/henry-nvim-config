@@ -100,6 +100,8 @@ let g:black_skip_string_normalization = 1
 let g:black_quiet = 1
 
 
+nnoremap ff :Black<cr>
+
 " NERDTree
 augroup Group2
 	autocmd!
@@ -107,10 +109,7 @@ augroup Group2
 	autocmd VimEnter * NERDTree | wincmd p
 	" close VIM automatically when NERDTree is the last window
 	autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |  quit | endif
-	"autoccmd FileType python let g:autoformatpython_enabled = 1
 augroup END
-
-nnoremap ff :Black<cr>
 
 " Native LSP is now configured through nvim-lspconfig and nvim-cmp
 
