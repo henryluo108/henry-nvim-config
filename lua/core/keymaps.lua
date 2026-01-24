@@ -67,6 +67,13 @@ vim.keymap.set('n', ']b', ':bn<cr>')
 -- s: search
 vim.keymap.set('n', '<leader>ss', '/')
 vim.keymap.set('n', '<leader>sw', '/\\<lt>\\><left><left>')
+vim.keymap.set('n', '<leader>sg', function() require'telescope.builtin'.live_grep{} end)
+vim.keymap.set('n', '<leader>sr', function() require'telescope.builtin'.live_grep{ search = vim.fn.expand('<cword>') } end)
+
+-- Create :Rg command for ripgrep search
+vim.api.nvim_create_user_command('Rg', function(opts)
+    require'telescope.builtin'.live_grep{ search = opts.args }
+end, { nargs = '?', desc = 'Search with ripgrep via Telescope' })
 -- l/g/w: language
 -- l: general
 -- g: goto
