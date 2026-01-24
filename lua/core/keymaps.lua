@@ -10,8 +10,8 @@ vim.keymap.set('n', 'gj', 'j')
 vim.keymap.set('n', 'k', 'gk')
 vim.keymap.set('n', 'gk', 'k')
 
--- black
-vim.keymap.set('n', 'ff', 'Black<cr>')
+-- black (set in plugin config to ensure Black command is available)
+-- vim.keymap.set('n', 'ff', 'Black<cr>')
 
 vim.keymap.set('n', '<C-J>', '<C-W><C-J>')
 vim.keymap.set('n', '<C-K>', '<C-W><C-K>')

@@ -19,6 +19,33 @@ vim.opt.shiftwidth  = 4
 vim.opt.softtabstop = 4
 vim.opt.expandtab   = true
 
+-- 基础选项（从 init.vim 迁移）
+vim.opt.clipboard = "unnamed,unnamedplus"
+vim.opt.mouse = "a"
+vim.opt.swapfile = false
+vim.opt.completeopt = "menu,menuone,noselect"
+vim.opt.backspace = "indent,eol,start"
+vim.opt.ruler = true
+vim.opt.hidden = true
+vim.opt.cmdheight = 2
+vim.opt.backup = false
+vim.opt.writebackup = false
+vim.opt.shortmess = "c"
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.incsearch = true
+vim.opt.smartindent = true
+vim.opt.hlsearch = true
+
+-- 编码设置（中文支持）
+vim.opt.langmenu = "zh_CN.UTF-8"
+vim.opt.fileencodings = "ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1"
+vim.opt.fileencoding = "utf-8"
+vim.opt.encoding = "utf-8"
+
+-- ESC 清除搜索高亮
+vim.keymap.set('n', '<silent> <ESC>', ':nohlsearch<CR>', { silent = true })
+
 vim.g.ale_disable_lsp = 1
 vim.g.ale_use_language_server = 0
 vim.g.ale_lsp_root = 'none'
@@ -34,8 +61,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
   end,
 })
-
-require("core.keymaps")
 
 -- disable some useless standard plugins to save startup time
 -- these features have been better covered by plugins
@@ -55,6 +80,12 @@ vim.g.loaded_tutor_mode_plugin = 1
 vim.g.loaded_remote_plugins    = 1
 vim.g.loaded_perl_provider     = 0
 vim.g.loaded_ruby_provider     = 0
+
+-- 插件全局变量配置（从 init.vim 迁移）
+vim.g.NERDTreeLimitedSyntax = 1
+vim.g.ale_fixers = { cpp = { 'astyle' } }
+vim.g.go_def_mapping_enabled = 0
+vim.g.rainbow_active = 1
 
 -- Load Lazy.nvim plugin manager
 require("configs.lazy").config()
@@ -76,6 +107,9 @@ require("configs.grammar").config()
 require("configs.todo-comments").config()
 
 require("configs.lsp").config()
+
+-- Load keymaps after plugins are loaded (so :Black command exists)
+require("core.keymaps")
 
 -- Ensure diagnostic signs are visible
 vim.fn.sign_define("DiagnosticSignError", { text = "✗", texthl = "DiagnosticSignError" })
@@ -112,16 +146,60 @@ vim.api.nvim_set_keymap('n', '<c-P>',
 --require("configs.lc").config()
 --require("configs.coc-nvim").config()
 
-vim.cmd [[augroup rainbow]]
-vim.cmd [[	au BufEnter *     hi      TSPunctBracket NONE]]
-vim.cmd [[	au BufEnter *     hi link TSPunctBracket nonexistenthl]]
-vim.cmd [[	au BufEnter *.lua hi      TSConstructor  NONE]]
-vim.cmd [[	au BufEnter *.lua hi link TSConstructor  nonexistenthl]]
-vim.cmd [[augroup END]]
+-- Rainbow 自动命令（从 init.vim 迁移）
+local rainbow_group = vim.api.nvim_create_augroup('RainbowHighlight', { clear = true })
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = rainbow_group,
+  pattern = '*',
+  callback = function()
+    vim.cmd('hi TSPunctBracket NONE')
+    vim.cmd('hi link TSPunctBracket nonexistenthl')
+  end,
+})
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = rainbow_group,
+  pattern = '*.lua',
+  callback = function()
+    vim.cmd('hi TSConstructor NONE')
+    vim.cmd('hi link TSConstructor nonexistenthl')
+  end,
+})
 
 -- gitgutter
 vim.g.gitgutter_preview_win_floating = 1
 vim.g.gitgutter_highlight_lines = 1
 vim.g.gitgutter_highlight_linenrs = 1
+
+-- NERDTree 自动命令（从 init.vim 迁移）
+local nerdtree_group = vim.api.nvim_create_augroup('NERDTreeGroup', { clear = true })
+vim.api.nvim_create_autocmd('VimEnter', {
+  group = nerdtree_group,
+  callback = function()
+    -- Don't open NERDTree in headless mode or when opening a specific file
+    if not vim.api.nvim_get_option_value('headless', {}) and vim.fn.argc() == 0 then
+      vim.cmd('NERDTree | wincmd p')
+    end
+  end,
+})
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = nerdtree_group,
+  callback = function()
+    if vim.fn.tabpagenr('$') == 1 and vim.fn.winnr('$') == 1 then
+      local buf = vim.api.nvim_get_current_buf()
+      local ft = vim.api.nvim_buf_get_option(buf, 'filetype')
+      if ft == 'nerdtree' then
+        vim.cmd('quit')
+      end
+    end
+  end,
+})
+
+-- Markdown 拼写检查
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  callback = function()
+    vim.opt_local.spell = true
+  end,
+})
 
 -- kawre/leetcode.nvim

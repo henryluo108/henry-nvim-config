@@ -1,8 +1,9 @@
 return {
     { "dstein64/vim-startuptime" },
     { "lewis6991/impatient.nvim" },
-    {
-        "preservim/nerdtree"
+{
+        "preservim/nerdtree",
+        lazy = false
     },
     {
         "johnstef99/vim-nerdtree-syntax-highlight",
@@ -48,7 +49,19 @@ return {
         }
     },
     { "lukas-reineke/indent-blankline.nvim" },
-    { "psf/black", branch = "stable" },
+    {
+        "psf/black",
+        branch = "stable",
+        ft = "python",
+        config = function()
+            vim.g.black_use_virtualenv = 0
+            vim.g.black_skip_string_normalization = 1
+            vim.g.black_quiet = 1
+        end,
+        keys = {
+            { "ff", ":Black<cr>", desc = "Format with Black", mode = "n" }
+        }
+    },
     { "fatih/vim-go" },
     {
         "preservim/tagbar",
