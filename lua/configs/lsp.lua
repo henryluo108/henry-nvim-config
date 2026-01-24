@@ -3,6 +3,32 @@
 ------------------------------------------------------------------------
 local M = {}
 function M.config()
+    -- Configure diagnostic display before setting up LSP
+    vim.diagnostic.config({
+        virtual_text = {
+            prefix = "•",
+            spacing = 2,
+            severity = { min = vim.diagnostic.severity.ERROR },
+        },
+        signs = {
+            text = {
+                [vim.diagnostic.severity.ERROR] = "✗",
+                [vim.diagnostic.severity.WARN] = "⚠",
+                [vim.diagnostic.severity.INFO] = "ℹ",
+                [vim.diagnostic.severity.HINT] = "⚡",
+            },
+        },
+        underline = true,
+        float = {
+            show_header = true,
+            source = "if_many",
+            border = "rounded",
+            focusable = false,
+        },
+        update_in_insert = false,
+        severity_sort = true,
+    })
+
     local mason = require("mason")
     local mason_lspconfig = require("mason-lspconfig")
 
@@ -178,7 +204,29 @@ function M.config()
         end
 
         vim.lsp.config(server_name, server_config)
-        vim.lsp.enable(server_name)
+        
+        -- Auto-start language servers for certain filetypes
+        if server_name == 'pyright' then
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = {"python"},
+                callback = function()
+                    if not vim.lsp.get_clients({ name = server_name })[1] then
+                        vim.lsp.enable(server_name)
+                    end
+                end,
+            })
+        elseif server_name == 'lua_ls' then
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = {"lua"},
+                callback = function()
+                    if not vim.lsp.get_clients({ name = server_name })[1] then
+                        vim.lsp.enable(server_name)
+                    end
+                end,
+            })
+        else
+            vim.lsp.enable(server_name)
+        end
     end
 end
 
