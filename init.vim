@@ -2,8 +2,7 @@ lua require('core.init')
 "let $PYTHONPATH="/Users/henry/anaconda3/envs/tf/bin/python"
 let g:python3_host_prog="/Users/henry/anaconda3/bin/python"
 
-"set guifont=SFMono\ NERD\ Font:h13
-set guifont=Monaco:h13
+set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Nerd\ Font:h13
 set clipboard^=unnamed,unnamedplus
 
 if has('unix')
@@ -113,7 +112,10 @@ augroup END
 
 " Native LSP is now configured through nvim-lspconfig and nvim-cmp
 
-" NERDTrees File highlighting only the glyph/icon
+let g:devicons_enable = 1
+let g:webdevicons_enable = 1
+let g:webdevicons_enable_nerdtree = 1
+let g:webdevicons_conceal_nerdtree_brackets = 1
 " test highlight just the glyph (icons) in nerdtree:
 "autocmd filetype nerdtree highlight haskell_icon ctermbg=none ctermfg=Red guifg=#ffa500
 "autocmd filetype nerdtree highlight html_icon ctermbg=none ctermfg=Red guifg=#ffa500

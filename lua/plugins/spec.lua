@@ -1,7 +1,12 @@
 return {
     { "dstein64/vim-startuptime" },
     { "lewis6991/impatient.nvim" },
-    { "kyazdani42/nvim-web-devicons" },
+    {
+        "preservim/nerdtree"
+    },
+    {
+        "johnstef99/vim-nerdtree-syntax-highlight",
+    },
     {
         "akinsho/bufferline.nvim",
         dependencies = {
@@ -12,13 +17,6 @@ return {
     { "sainnhe/sonokai" },
     { "tiagovla/tokyodark.nvim" },
     { "rebelot/kanagawa.nvim" },
-    {
-        "preservim/nerdtree"
-    },
-    { "ryanoasis/vim-devicons" },
-    {
-        "johnstef99/vim-nerdtree-syntax-highlight",
-    },
     { "hrsh7th/cmp-nvim-lsp" },
     { "hrsh7th/cmp-buffer" },
     { "hrsh7th/cmp-path" },
@@ -120,16 +118,6 @@ return {
             }
         }
     },
-    {
-        "kawre/leetcode.nvim",
-        lazy = true,
-        dependencies = {
-            "nvim-telescope/telescope.nvim",
-            "nvim-lua/plenary.nvim",
-            "MunifTanjim/nui.nvim",
-            "nvim-treesitter/nvim-treesitter",
-            "rcarriga/nvim-notify",
-            "nvim-tree/nvim-web-devicons"
-        }
-    },
+    { "kyazdani42/nvim-web-devicons" },
+    { "ryanoasis/vim-devicons" }
 }
