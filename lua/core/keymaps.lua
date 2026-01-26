@@ -5,6 +5,9 @@ vim.g.maplocalleader = ' '
 
 vim.keymap.set('n', '<leader><ESC>', ':noh<cr>')
 
+-- Clear search highlights with ESC in normal mode
+vim.keymap.set('n', '<esc>', ':noh<cr>', { silent = true })
+
 vim.keymap.set('n', 'j', 'gj')
 vim.keymap.set('n', 'gj', 'j')
 vim.keymap.set('n', 'k', 'gk')
