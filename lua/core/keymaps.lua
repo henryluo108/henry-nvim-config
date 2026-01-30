@@ -33,6 +33,8 @@ vim.keymap.set('n', '<F9>', function() require'telescope.builtin'.find_files{} e
 vim.keymap.set('n', '<F10>', function() require'telescope.builtin'.git_files{} end)
 vim.keymap.set('n', '<F11>', function() require'telescope.builtin'.buffers{} end)
 vim.keymap.set({'n', 'i'}, '<C-p>', function() require'telescope.builtin'.registers{} end)
+-- s: search with fzf-lua
+vim.keymap.set('n', '<C-P>', function() require('fzf-lua').files() end, { noremap = true, silent = true })
 -- c: quick command
 vim.keymap.set('n', '<leader>ce', ':e<space>')
 vim.keymap.set('n', '<leader>cw', ':w<cr>')

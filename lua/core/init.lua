@@ -97,10 +97,7 @@ require("core.theme")
 
 vim.g.webdevicons_enable = 1
 
-require("nvim-autopairs").setup({
-  disable_filetype = { "TelescopePrompt" , "vim" },
-})
-
+require("configs.autopairs").config()
 require("configs.nvim-cmp")
 require("configs.statusline").config()
 require("configs.treesitter").config()
@@ -134,10 +131,6 @@ vim.api.nvim_create_autocmd("CursorHold", {
         vim.diagnostic.open_float(nil, opts)
     end,
 })
-
-vim.api.nvim_set_keymap('n', '<c-P>',
-    "<cmd>lua require('fzf-lua').files()<CR>",
-    { noremap = true, silent = true })
 
 -- Rainbow 自动命令（从 init.vim 迁移）
 local rainbow_group = vim.api.nvim_create_augroup('RainbowHighlight', { clear = true })
