@@ -93,7 +93,7 @@ vim.g.rainbow_active = 1
 -- Load Lazy.nvim plugin manager
 require("configs.lazy").config()
 
-require("core.theme")
+require("configs.theme")
 
 vim.g.webdevicons_enable = 1
 
@@ -107,30 +107,10 @@ require("configs.grammar").config()
 require("configs.todo-comments").config()
 
 require("configs.lsp").config()
+require("configs.diagnostics").config()
 
 -- Load keymaps after plugins are loaded (so :Black command exists)
 require("core.keymaps")
-
--- Ensure diagnostic signs are visible
-vim.fn.sign_define("DiagnosticSignError", { text = "✗", texthl = "DiagnosticSignError" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = "⚠", texthl = "DiagnosticSignWarn" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = "ℹ", texthl = "DiagnosticSignInfo" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "⚡", texthl = "DiagnosticSignHint" })
-
--- Auto show diagnostic on cursor hold
-vim.api.nvim_create_autocmd("CursorHold", {
-    callback = function()
-        local opts = {
-            focusable = false,
-            close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-            border = "rounded",
-            source = "if_many",
-            prefix = " ",
-            scope = "cursor",
-        }
-        vim.diagnostic.open_float(nil, opts)
-    end,
-})
 
 -- Rainbow 自动命令（从 init.vim 迁移）
 local rainbow_group = vim.api.nvim_create_augroup('RainbowHighlight', { clear = true })
