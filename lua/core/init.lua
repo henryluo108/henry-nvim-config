@@ -1,14 +1,17 @@
 -- basics
 vim.cmd('syntax on')
 vim.cmd('filetype plugin indent on')
+
+-- Set leader keys (must be set before loading lazy.nvim)
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 vim.opt.number         = true
 vim.opt.relativenumber = true
-vim.opt.termguicolors  = true
 vim.opt.shiftround     = true
 vim.opt.updatetime     = 100
 vim.opt.cursorline     = true
 vim.opt.autowrite      = true
-if (vim.fn.has('termguicolors') == 1) then
+if vim.fn.has('termguicolors') == 1 then
     vim.opt.termguicolors = true
 end
 vim.opt.filetype    = "on"
@@ -136,16 +139,6 @@ vim.api.nvim_set_keymap('n', '<c-P>',
     "<cmd>lua require('fzf-lua').files()<CR>",
     { noremap = true, silent = true })
 
---require 'colorizer'.setup()
---require 'colorizer'.setup {
-    --'python',
-    --html = {
-        --mode = 'foreground'
-    --}
---}
---require("configs.lc").config()
---require("configs.coc-nvim").config()
-
 -- Rainbow 自动命令（从 init.vim 迁移）
 local rainbow_group = vim.api.nvim_create_augroup('RainbowHighlight', { clear = true })
 vim.api.nvim_create_autocmd('BufEnter', {
@@ -201,5 +194,3 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.opt_local.spell = true
   end,
 })
-
--- kawre/leetcode.nvim

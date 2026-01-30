@@ -1,8 +1,3 @@
---vim.g.mapleader = '\<space>'
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-
-
 vim.keymap.set('n', '<leader><ESC>', ':noh<cr>')
 
 -- Clear search highlights with ESC in normal mode

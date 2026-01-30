@@ -1,7 +1,6 @@
 return {
     { "dstein64/vim-startuptime" },
-    { "lewis6991/impatient.nvim" },
-{
+    {
         "preservim/nerdtree",
         lazy = false
     },
@@ -104,9 +103,6 @@ return {
     },
     {
         "junegunn/vim-easy-align",
-    },
-    {
-        "nvim-treesitter/playground"
     },
     {
         "neovim/nvim-lspconfig",
