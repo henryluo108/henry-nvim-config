@@ -11,9 +11,8 @@ A modern, feature-rich Neovim configuration using **lazy.nvim** as the plugin ma
 ├── lazy-lock.json             # Plugin version pinning
 ├── lua/
 │   ├── core/
-│   │   ├── init.lua           # Main Lua entry, basic settings
-│   │   ├── keymaps.lua        # All key mappings (deduplicated LSP handlers)
-│   │   └── theme.lua          # Colorscheme configuration (kanagawa)
+│   │   ├── init.lua           # Main Lua entry, basic settings, plugin loading
+│   │   └── keymaps.lua        # All key mappings (simplified, LSP handlers moved)
 │   ├── configs/
 │   │   ├── lsp.lua            # LSP server setup (mason, lspconfig, multi-server)
 │   │   ├── nvim-cmp.lua       # Autocompletion configuration
@@ -25,10 +24,16 @@ A modern, feature-rich Neovim configuration using **lazy.nvim** as the plugin ma
 │   │   ├── git.lua            # Git integration (gitsigns)
 │   │   ├── todo-comments.lua  # TODO comment highlighting
 │   │   ├── grammar.lua        # Grammar checking
-│   │   ├── lazy.lua           # Plugin manager bootstrap
-│   │   └── startscreen.lua    # Startup screen (disabled)
+│   │   ├── diagnostics.lua    # Diagnostic signs and floating window
+│   │   ├── autopairs.lua      # Auto-pairing configuration
+│   │   ├── theme.lua          # Colorscheme configuration (kanagawa)
+│   │   └── lazy.lua           # Plugin manager bootstrap
+│   ├── utils/
+│   │   └── lsp-utils.lua      # LSP deduplication utilities (code actions, go-to-def)
 │   └── plugins/
 │       └── spec.lua           # Plugin specifications for lazy.nvim
+├── snippets/
+│   └── lua/                   # Custom Lua snippets
 └── README.md                  # This file
 ```
 
@@ -66,9 +71,10 @@ let g:python3_host_prog="/Users/henry/anaconda3/bin/python"
 ## Key Features
 
 ### 1. **Advanced LSP Configuration**
-- **Multi-server support**: Configures multiple LSP servers per language
+- **Multi-server support**: Configures multiple LSP servers per language with conflict prevention
 - **Conflict prevention**: Smart capability disabling to avoid duplicate definitions
-- **Deduplicated handlers**: Custom `gd` and code action functions eliminate duplicate prompts
+- **Deduplicated handlers**: LSP utilities in `utils/lsp-utils.lua` eliminate duplicate prompts for `gd` and code actions
+- **Modular design**: LSP logic separated into `configs/lsp.lua` and `utils/lsp-utils.lua`
 - **Supported LSP servers**:
   - **Python**: pyright (primary), ruff (linting/formatting), pylsp (code actions)
   - **Lua**: lua_ls
@@ -146,7 +152,7 @@ let g:python3_host_prog="/Users/henry/anaconda3/bin/python"
 | **`<F10>`** | Telescope git files | |
 | **`<F11>`** | Telescope buffers | |
 | **`<C-p>`** | Telescope registers | |
-| **`<C-P>`** | fzf-lua files | |
+| **`<C-P>`** | fzf-lua files | Case-sensitive |
 | **`ff`** | Black format (Python) | |
 | **`t` / `T`** | EasyMotion f/F motions | |
 | **`ga`** | EasyAlign | |
@@ -200,7 +206,6 @@ let g:python3_host_prog="/Users/henry/anaconda3/bin/python"
 
 ### Core
 - **lazy.nvim**: Plugin manager
-- **impatient.nvim**: Startup optimization
 - **nvim-lspconfig**: LSP configuration
 - **mason.nvim**: LSP server management
 
@@ -312,7 +317,7 @@ nvim --headless "+Lazy! clean" +qa
 ## Customizations
 
 ### Theme Options
-The configuration supports multiple themes (configured in `lua/core/theme.lua`):
+The configuration supports multiple themes (configured in `lua/configs/theme.lua`):
 - **kanagawa** (default): Elegant Japanese-inspired theme
 - **sonokai**: Vibrant colors
 - **tokyodark**: Dark theme
@@ -330,6 +335,11 @@ Some features can be disabled by commenting out lines in `lua/core/init.lua`:
 2. Add to `lua/configs/lsp.lua` server list
 3. Configure in `on_attach` function if needed
 4. Add keymaps if required
+
+### Code Organization
+- **LSP utilities**: Place complex LSP handlers in `lua/utils/lsp-utils.lua`
+- **Plugin configs**: All plugin configurations go in `lua/configs/`
+- **Keymaps**: All mappings in `lua/core/keymaps.lua`
 
 ### Updating Plugins
 ```bash
