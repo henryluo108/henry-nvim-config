@@ -121,16 +121,9 @@ function M.config()
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
         vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
 
-        -- Use the global deduplicated code action function for all file types
+        -- Use deduplicated code action from utils module
         vim.keymap.set('n', '<leader>ca', function()
-            -- Use the deduplicated code action function from keymaps.lua
-            local success, keymaps_module = pcall(require, 'core.keymaps')
-            if success and keymaps_module.deduplicated_code_action then
-                keymaps_module.deduplicated_code_action()
-            else
-                -- Fallback to default code action
-                vim.lsp.buf.code_action()
-            end
+            require('utils.lsp-utils').deduplicated_code_action()
         end, opts)
         -- Do not add 'gd' or 'gD' mappings here to prevent conflicts with global mappings
     end
