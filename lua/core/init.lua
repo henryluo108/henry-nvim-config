@@ -175,8 +175,8 @@ local nerdtree_group = vim.api.nvim_create_augroup('NERDTreeGroup', { clear = tr
 vim.api.nvim_create_autocmd('VimEnter', {
   group = nerdtree_group,
   callback = function()
-    -- Don't open NERDTree in headless mode or when opening a specific file
-    if not vim.api.nvim_get_option_value('headless', {}) and vim.fn.argc() == 0 then
+    -- Don't open NERDTree when opening a specific file
+    if vim.fn.argc() == 0 then
       vim.cmd('NERDTree | wincmd p')
     end
   end,
