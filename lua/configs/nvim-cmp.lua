@@ -140,18 +140,7 @@ cmp.setup({
     end, { 'i', 's' }),
   }),
   sources = cmp.config.sources({
-    { name = 'nvim_lsp', 
-      entry_filter = function(entry, ctx)
-        local client = entry.source.source.client
-        if client then
-          -- Filter out pylsp to avoid duplicates with pyright
-          if client.name == 'pylsp' then
-            return false
-          end
-        end
-        return true
-      end
-    },
+    { name = 'nvim_lsp' },
     { name = 'luasnip', duplicates = false },
   }, {
     { name = 'buffer', duplicates = false },

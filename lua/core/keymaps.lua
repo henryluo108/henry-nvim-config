@@ -146,4 +146,4 @@ vim.keymap.set('n', '<leader>sk', '<cmd>lua require("luasnip").jump(-1)<cr>', { 
 vim.keymap.set('n', '<leader>sl', '<cmd>lua require("luasnip").list_select()<cr>', { desc = 'Snippet: List choices' })
 vim.keymap.set('n', '<leader>sr', '<cmd>lua require("luasnip").refresh()<cr>', { desc = 'Snippet: Refresh' })
 
-return M
+

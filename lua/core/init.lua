@@ -53,18 +53,6 @@ vim.g.ale_disable_lsp = 1
 vim.g.ale_use_language_server = 0
 vim.g.ale_lsp_root = 'none'
 
--- Disable pylsp (python-lsp-server) to avoid conflicts with pyright
-vim.api.nvim_create_augroup('DisablePylsp', {})
-vim.api.nvim_create_autocmd('LspAttach', {
-  group = 'DisablePylsp',
-  callback = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if client and client.name == 'pylsp' then
-      vim.lsp.stop_client(client.id)
-    end
-  end,
-})
-
 -- disable some useless standard plugins to save startup time
 -- these features have been better covered by plugins
 vim.g.loaded_matchparen        = 1

@@ -111,20 +111,19 @@ return {
         "mason-org/mason-lspconfig.nvim",
         opts = {},
         dependencies = {
-            { "mason-org/mason.nvim", opts = {} },
-            "neovim/nvim-lspconfig",
-        }
-    },
-    {
-        "mason-org/mason.nvim",
-        opts = {
-            ui = {
-                icons = {
-                    package_installed = "✓",
-                    package_pending = "➜",
-                    package_uninstalled = "✗"
+            {
+                "mason-org/mason.nvim",
+                opts = {
+                    ui = {
+                        icons = {
+                            package_installed = "✓",
+                            package_pending = "➜",
+                            package_uninstalled = "✗"
+                        }
+                    }
                 }
-            }
+            },
+            "neovim/nvim-lspconfig",
         }
     },
     { "kyazdani42/nvim-web-devicons" },
