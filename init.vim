@@ -22,7 +22,7 @@ func! CompileRunGcc()
 	elseif &filetype == 'sh'
 		:!time bash %
 	elseif &filetype == 'python'
-		exec "!/Users/henry/anaconda3/envs/tf/bin/python %"
+		exec "!/Users/henry/anaconda3/bin/python3 %"
 	elseif &filetype == 'html'
 		exec "!firefox % &"
 	elseif &filetype == 'go'
