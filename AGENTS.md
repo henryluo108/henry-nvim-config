@@ -4,7 +4,7 @@ This document provides guidelines and commands for agentic coding agents working
 
 ## Repository Context
 
-This is a personal Neovim configuration using **lazy.nvim** as the plugin manager. The configuration is split between traditional Vimscript (`init.vim`) and Lua (`lua/` directory) with a modular architecture designed for performance and conflict-free multi-LSP server support.
+This is a personal Neovim configuration using **lazy.nvim** as the plugin manager. The configuration is written in Lua (`lua/` directory) with a modular architecture designed for performance and conflict-free multi-LSP server support.
 
 **User:** Henry (Chinese conversation, English code)
 
@@ -56,10 +56,11 @@ nvim --headless "+Lazy! show" +qa
 ## Code Style Guidelines
 
 ### File Organization
-- **Entry point**: `init.vim` loads `lua/core/init.lua`
-- **Core modules**: `lua/core/` for fundamental functionality
+- **Entry point**: `init.lua` sets up Python path, F5 runner, then loads `lua/core/init.lua`
+- **Core modules**: `lua/core/` for fundamental functionality (settings, keymaps)
 - **Plugin configs**: `lua/configs/` for individual plugin setups
 - **Plugin specs**: `lua/plugins/spec.lua` for lazy.nvim plugin definitions
+- **LSP utilities**: `lua/utils/lsp-utils.lua` for deduplication handlers
 
 ### Lua Coding Conventions
 
@@ -110,7 +111,7 @@ end
 - Use `on_attach` function to manage capability conflicts
 
 #### Primary/Secondary Server Mapping
-- **Python**: pyright (primary), ruff (linting/formatting), pylsp (code actions)
+- **Python**: pyright (primary), ruff (linting/formatting)
 - **Lua**: lua_ls (primary)
 - **TypeScript/JavaScript**: ts_ls (primary)
 - **Go**: gopls (primary)
@@ -165,8 +166,8 @@ end
 
 #### Python Environment
 - **Python path**: `/Users/henry/anaconda3/bin/python`
-- **Conda env**: `tf` environment for TensorFlow projects
 - **Formatter**: Black (via `ff` keymap or `<leader>lf`)
+- **Runner**: F5 uses `/Users/henry/anaconda3/bin/python3`
 
 #### Go Configuration
 - **LSP**: gopls with vim-go integration
@@ -207,4 +208,4 @@ end
 - **File handling**: Backup and swap files disabled
 - **Multi-LSP**: Custom handlers prevent duplicate prompts
 - **Python**: Anaconda environment path must exist
-- **Git**: Integration with gitsigns, fugitive, and gitgutter
+- **Git**: Integration with gitsigns and fugitive

@@ -7,7 +7,7 @@ A modern, feature-rich Neovim configuration using **lazy.nvim** as the plugin ma
 ### File Structure
 ```
 ~/.config/nvim/
-├── init.vim                    # Entry point, Vimscript settings, autocommands
+├── init.lua                    # Entry point, Python path, F5 runner, font settings
 ├── lazy-lock.json             # Plugin version pinning
 ├── lua/
 │   ├── core/
@@ -20,7 +20,6 @@ A modern, feature-rich Neovim configuration using **lazy.nvim** as the plugin ma
 │   │   ├── statusline.lua     # lualine configuration
 │   │   ├── bufferline.lua     # Buffer tabs
 │   │   ├── outlinetree.lua    # Symbols outline
-│   │   ├── filetree.lua       # File explorer (nvim-tree)
 │   │   ├── git.lua            # Git integration (gitsigns)
 │   │   ├── todo-comments.lua  # TODO comment highlighting
 │   │   ├── grammar.lua        # Grammar checking
@@ -43,7 +42,6 @@ A modern, feature-rich Neovim configuration using **lazy.nvim** as the plugin ma
 - **Neovim v0.9+** (latest version recommended)
 - **Git** (for plugin installation)
 - **Ripgrep** (for fuzzy finding and todo-comments)
-- **LanguageTool** (for grammar checking, optional)
 
 ### Installation
 ```bash
@@ -60,12 +58,12 @@ nvim
 ```
 
 ### Environment Setup
-```vim
-" Python environment (configured in init.vim)
-let g:python3_host_prog="/Users/henry/anaconda3/bin/python"
+```lua
+-- Python environment (configured in init.lua)
+vim.g.python3_host_prog = vim.fn.expand("$HOME/anaconda3/bin/python")
 
-" F5 runner uses conda tf environment for Python:
-" /Users/henry/anaconda3/envs/tf/bin/python
+-- F5 runner uses Anaconda Python:
+-- /Users/henry/anaconda3/bin/python3
 ```
 
 ## Key Features
@@ -74,9 +72,10 @@ let g:python3_host_prog="/Users/henry/anaconda3/bin/python"
 - **Multi-server support**: Configures multiple LSP servers per language with conflict prevention
 - **Conflict prevention**: Smart capability disabling to avoid duplicate definitions
 - **Deduplicated handlers**: LSP utilities in `utils/lsp-utils.lua` eliminate duplicate prompts for `gd` and code actions
+- **Modern LSP API**: Uses Neovim's native `vim.lsp.config()` and `vim.lsp.enable()` APIs
 - **Modular design**: LSP logic separated into `configs/lsp.lua` and `utils/lsp-utils.lua`
 - **Supported LSP servers**:
-  - **Python**: pyright (primary), ruff (linting/formatting), pylsp (code actions)
+  - **Python**: pyright (primary), ruff (linting/formatting)
   - **Lua**: lua_ls
   - **TypeScript/JavaScript**: ts_ls
   - **Go**: gopls
@@ -97,14 +96,13 @@ let g:python3_host_prog="/Users/henry/anaconda3/bin/python"
 ### 4. **UI Components**
 - **Status line**: Custom bubbles theme with `lualine.nvim`
 - **Buffer tabs**: `bufferline.nvim` with diagnostics indicators
-- **File explorer**: `NERDTree` (primary) + `nvim-tree` (configured)
+- **File explorer**: `NERDTree` with syntax highlighting
 - **Symbols outline**: `symbols-outline.nvim` for code navigation
 - **Theme**: `kanagawa.nvim` (configurable: sonokai, tokyodark available)
 
 ### 5. **Development Tools**
 - **Git integration**: `gitsigns.nvim` + `vim-fugitive` + `vim-gitgutter`
 - **TODO comments**: `todo-comments.nvim` with FIX, TODO, HACK, WARN, PERF, NOTE, TEST
-- **Grammar checking**: `vim-grammarous` for writing assistance
 - **Autopairs**: `nvim-autopairs` for automatic bracket/quote completion
 - **Rainbow brackets**: Custom treesitter-based rainbow highlighting
 - **Colorizer**: `nvim-colorizer.lua` for hex/rgb color preview
@@ -169,7 +167,7 @@ let g:python3_host_prog="/Users/henry/anaconda3/bin/python"
 ### F5 Runner (File Type Specific)
 | File Type | Command |
 |-----------|---------|
-| **Python** | `/Users/henry/anaconda3/envs/tf/bin/python %` |
+| **Python** | `/Users/henry/anaconda3/bin/python3 %` |
 | **Go** | `go run %` |
 | **C/C++** | `g++ -std=c++17 -g % -o %:r && ./%:r` |
 | **Shell** | `bash %` |
@@ -181,10 +179,9 @@ let g:python3_host_prog="/Users/henry/anaconda3/bin/python"
 ### Python
 - **Primary LSP**: pyright (type checking)
 - **Linting/Formatting**: ruff (fast, modern)
-- **Code Actions**: pylsp (comprehensive, including auto-imports)
 - **Formatter**: Black (`<leader>lf` or `ff`)
 - **Python Path**: Anaconda at `/Users/henry/anaconda3/bin/python`
-- **Runner**: F5 uses conda tf environment
+- **Runner**: F5 uses `/Users/henry/anaconda3/bin/python3`
 
 ### Go
 - **LSP**: gopls
@@ -255,35 +252,31 @@ let g:python3_host_prog="/Users/henry/anaconda3/bin/python"
 ### Navigation & Search
 - **telescope.nvim**: Fuzzy finder
 - **fzf-lua**: Alternative fuzzy finder with UI-select
-- **nvim-tree.lua**: File explorer
-- **NERDTree**: Classic file tree
+- **NERDTree**: File tree with syntax highlighting
 - **symbols-outline.nvim**: Code outline
 - **tagbar**: Tag browser
+- **indent-blankline.nvim**: Indentation guides
 
 ### Git
-- **gitsigns.nvim**: Git gutter signs
+- **gitsigns.nvim**: Git gutter signs with hunk navigation
 - **vim-fugitive**: Git commands
-- **vim-gitgutter**: Git diff markers
 
 ### Development Tools
 - **nvim-treesitter**: Syntax highlighting
 - **nvim-autopairs**: Auto-pair insertion
 - **todo-comments.nvim**: TODO comment highlighting
-- **vim-grammarous**: Grammar checking
 - **black**: Python formatter
 - **vim-go**: Go development
-- **ale**: Async linting (limited use)
+- **rainbow-delimiters.nvim**: Rainbow bracket highlighting
 
 ### Motion & Editing
 - **vim-easymotion**: Jump to any position
 - **vim-easy-align**: Easy alignment
 - **nerdcommenter**: Comment management
-- **rainbow**: Rainbow brackets
 
 ### Terminal & Utilities
 - **vim-floaterm**: Floating terminal
-- **nvim-notify**: Notification system
-- **ctrlp.vim**: Fuzzy finder backup
+- **vim-startuptime**: Startup time profiler
 
 ## Troubleshooting
 
@@ -337,6 +330,7 @@ Some features can be disabled by commenting out lines in `lua/core/init.lua`:
 4. Add keymaps if required
 
 ### Code Organization
+- **Entry point**: `init.lua` for Python path, F5 runner, and font settings
 - **LSP utilities**: Place complex LSP handlers in `lua/utils/lsp-utils.lua`
 - **Plugin configs**: All plugin configurations go in `lua/configs/`
 - **Keymaps**: All mappings in `lua/core/keymaps.lua`
@@ -355,8 +349,8 @@ nvim --headless "+Lazy! show" +qa
 - **Clipboard**: Configured for system clipboard (`unnamedplus`)
 - **Encoding**: UTF-8 with Chinese text support
 - **Backup**: Disabled (nobackup, nowritebackup, noswapfile)
-- **Multiple LSP Servers**: Handled via capability disabling in `on_attach`
-- **Deduplication**: Custom handlers for `gd` and code actions prevent duplicates
+- **LSP Conflict Prevention**: Handled via capability disabling in `on_attach` and modern `vim.lsp.config` API
+- **Deduplication**: Custom handlers for `gd` and code actions prevent duplicates from multiple servers
 
 ## License
 MIT

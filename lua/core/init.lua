@@ -1,8 +1,8 @@
--- basics
+vim.loader.enable()
+
 vim.cmd('syntax on')
 vim.cmd('filetype plugin indent on')
 
--- Set leader keys (must be set before loading lazy.nvim)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.opt.number         = true
@@ -49,9 +49,7 @@ vim.opt.encoding = "utf-8"
 -- ESC 清除搜索高亮
 vim.keymap.set('n', '<silent> <ESC>', ':nohlsearch<CR>', { silent = true })
 
-vim.g.ale_disable_lsp = 1
-vim.g.ale_use_language_server = 0
-vim.g.ale_lsp_root = 'none'
+
 
 -- disable some useless standard plugins to save startup time
 -- these features have been better covered by plugins
@@ -74,9 +72,9 @@ vim.g.loaded_ruby_provider     = 0
 
 -- 插件全局变量配置（从 init.vim 迁移）
 vim.g.NERDTreeLimitedSyntax = 1
-vim.g.ale_fixers = { cpp = { 'astyle' } }
+
 vim.g.go_def_mapping_enabled = 0
-vim.g.rainbow_active = 1
+
 
 -- Load Lazy.nvim plugin manager
 require("configs.lazy").config()
@@ -100,38 +98,14 @@ require("configs.diagnostics").config()
 -- Load keymaps after plugins are loaded (so :Black command exists)
 require("core.keymaps")
 
--- Rainbow 自动命令（从 init.vim 迁移）
-local rainbow_group = vim.api.nvim_create_augroup('RainbowHighlight', { clear = true })
-vim.api.nvim_create_autocmd('BufEnter', {
-  group = rainbow_group,
-  pattern = '*',
-  callback = function()
-    vim.cmd('hi TSPunctBracket NONE')
-    vim.cmd('hi link TSPunctBracket nonexistenthl')
-  end,
-})
-vim.api.nvim_create_autocmd('BufEnter', {
-  group = rainbow_group,
-  pattern = '*.lua',
-  callback = function()
-    vim.cmd('hi TSConstructor NONE')
-    vim.cmd('hi link TSConstructor nonexistenthl')
-  end,
-})
-
--- gitgutter
-vim.g.gitgutter_preview_win_floating = 1
-vim.g.gitgutter_highlight_lines = 1
-vim.g.gitgutter_highlight_linenrs = 1
-
 -- NERDTree 自动命令（从 init.vim 迁移）
 local nerdtree_group = vim.api.nvim_create_augroup('NERDTreeGroup', { clear = true })
 vim.api.nvim_create_autocmd('VimEnter', {
   group = nerdtree_group,
   callback = function()
-    -- Don't open NERDTree when opening a specific file
     if vim.fn.argc() == 0 then
-      vim.cmd('NERDTree | wincmd p')
+      vim.cmd('NERDTree')
+      vim.cmd('wincmd p')
     end
   end,
 })

@@ -9,35 +9,38 @@ This is a personal Neovim configuration using **lazy.nvim** as the plugin manage
 ### File Structure
 ```
 ~/.config/nvim/
-├── init.vim                    # Entry point, Vimscript settings, autocommands
+├── init.lua                    # Entry point, Python path, F5 runner, font settings
 ├── lazy-lock.json             # Plugin version pinning
 ├── lua/
 │   ├── core/
-│   │   ├── init.lua           # Main Lua entry, loads all configs
-│   │   ├── keymaps.lua        # All key mappings
-│   │   └── theme.lua          # Colorscheme configuration
+│   │   ├── init.lua           # Main Lua entry, basic settings, plugin loading
+│   │   └── keymaps.lua        # All key mappings
 │   ├── configs/
-│   │   ├── lsp.lua            # LSP server setup (mason, lspconfig)
+│   │   ├── lsp.lua            # LSP server setup (mason, native LSP API)
 │   │   ├── nvim-cmp.lua       # Autocompletion configuration
 │   │   ├── treesitter.lua     # Treesitter syntax highlighting
 │   │   ├── statusline.lua     # lualine configuration
 │   │   ├── bufferline.lua     # Buffer tabs
 │   │   ├── outlinetree.lua    # Symbols outline
-│   │   ├── filetree.lua       # File explorer (nvim-tree)
 │   │   ├── git.lua            # Git integration
 │   │   ├── todo-comments.lua  # TODO comment highlighting
-│   │   ├── grammar.lua        # Grammar checking
-│   │   ├── lazy.lua           # Plugin manager bootstrap
-│   │   └── lc.lua             # Language client (unused)
+│   │   ├── diagnostics.lua    # Diagnostic configuration
+│   │   ├── autopairs.lua      # Auto-pairing configuration
+│   │   ├── theme.lua          # Colorscheme configuration
+│   │   └── lazy.lua           # Plugin manager bootstrap
+│   ├── utils/
+│   │   └── lsp-utils.lua      # LSP deduplication utilities
 │   └── plugins/
 │       └── spec.lua           # Plugin specifications for lazy.nvim
+├── snippets/
+│   └── lua/                   # Custom Lua snippets
 └── README.md                  # User documentation
 ```
 
 ### Key Design Decisions
-1. **Dual Entry Point**: `init.vim` loads `lua/core/init.lua`
+1. **Entry Point**: `init.lua` loads `lua/core/init.lua` for core configuration
 2. **Lazy Loading**: Uses lazy.nvim for plugin management with `lazy-lock.json` for version pinning
-3. **LSP-First**: Native LSP via nvim-lspconfig + mason for server management
+3. **LSP-First**: Native LSP via `vim.lsp.config()` API + mason for server management
 4. **Conflict Prevention**: Custom `gd` mapping with deduplication to handle multiple LSP servers
 5. **Language-Specific LSP**: Configures specific LSP servers per filetype to prevent conflicts
 
@@ -114,10 +117,10 @@ nvim --headless "+checkhealth" +qa
 ## Language-Specific Configurations
 
 ### Python
-- **LSP**: pyright
+- **LSP**: pyright (primary), ruff (linting/formatting)
 - **Formatter**: Black (`<leader>lf` or `ff`)
 - **Python Path**: Uses Anaconda at `/Users/henry/anaconda3/bin/python`
-- **Runner**: F5 uses conda tf environment
+- **Runner**: F5 uses `/Users/henry/anaconda3/bin/python3`
 
 ### Go
 - **LSP**: gopls
@@ -170,4 +173,3 @@ nvim ~/.local/share/nvim/lazy/lazy.nvim/log
 - **Rainbow Brackets**: Enabled via treesitter + custom highlighting
 - **Git Integration**: gitsigns + vim-fugitive + vim-gitgutter
 - **Terminal**: Floaterm for floating terminal windows
-- **Grammar**: vim-grammarous for writing assistance
