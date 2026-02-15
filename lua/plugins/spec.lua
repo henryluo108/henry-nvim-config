@@ -143,5 +143,11 @@ return {
         }
     },
     { "kyazdani42/nvim-web-devicons", lazy = true },
-    { "ryanoasis/vim-devicons", lazy = true }
+    { "ryanoasis/vim-devicons", lazy = true },
+    {
+        "aikhe/wrapped.nvim",
+        dependencies = { "nvzone/volt", "nvim-lua/plenary.nvim" },
+        cmd = { "NvimWrapped" },
+        opts = {},
+    },
 }

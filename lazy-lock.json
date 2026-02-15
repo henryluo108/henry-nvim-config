@@ -42,5 +42,7 @@
   "vim-fugitive": { "branch": "master", "commit": "61b51c09b7c9ce04e821f6cf76ea4f6f903e3cf4" },
   "vim-go": { "branch": "master", "commit": "a5a612535a92d68a4282d1c8dde901275c0c1260" },
   "vim-nerdtree-syntax-highlight": { "branch": "master", "commit": "0c495b4ec3776946d4b6a9f08c0e48d683af4add" },
-  "vim-startuptime": { "branch": "master", "commit": "b6f0d93f6b8cf6eee0b4c94450198ba2d6a05ff6" }
+  "vim-startuptime": { "branch": "master", "commit": "b6f0d93f6b8cf6eee0b4c94450198ba2d6a05ff6" },
+  "volt": { "branch": "main", "commit": "620de1321f275ec9d80028c68d1b88b409c0c8b1" },
+  "wrapped.nvim": { "branch": "master", "commit": "a36e2bd3ab57df51900f43645d5143bc599f7015" }
 }
